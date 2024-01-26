@@ -1,74 +1,75 @@
-// Image switcher code
 
 let myImage = document.querySelector('img');
 
 myImage.onclick = function() {
   let mySrc = myImage.getAttribute('src');
-  if(mySrc === 'images/firefox-icon.png') {
-    myImage.setAttribute ('src','images/firefox2.png');
+  if(mySrc === 'images/books.png') {
+    myImage.setAttribute ('src','images/idiot.jpg');
   } else {
-    myImage.setAttribute ('src','images/firefox-icon.png');
+    myImage.setAttribute ('src','images/books.png');
   }
 }
-
-// Personalized welcome message code
 
 let myButton = document.querySelector('button');
-let myHeading = document.querySelector('h1');
-
-function setUserName() {
-  let myName = prompt('Please enter your name.');
-  if(!myName) {
-    setUserName();
-  } else {
-    localStorage.setItem('name', myName);
-    myHeading.innerHTML = 'Mozilla is cool, ' + myName;
-  }
-}
-
-if(!localStorage.getItem('name')) {
-  setUserName();
-} else {
-  let storedName = localStorage.getItem('name');
-  myHeading.innerHTML = 'Mozilla is cool, ' + storedName;
-}
+let hiddenImage = document.getElementById("hiddenImage")
 
 myButton.onclick = function() {
-  setUserName();
+    hiddenImage.style.display = (hiddenImage.style.display === "none") ? "block" : "none";
 }
 
-/** let = keyword to declare a variable */
-
-/** let myVariable = "Bob"; */
-// let myVariable1;
-// myVariable1 = "Bob";
-
-/** Conditionals */
-// let iceCream = "chocolate";
-// if (iceCream === "chocolate") {
-//   alert("Yay, I love chocolate ice cream!");
-// } else {
-//   alert("Awwww, but chocolate is my favorite…");
-// }
-
-/** Functions */
-// let myVariable = document.querySelector("h1");
-// alert("hello!");
-
-// function multiple(num1, num2) {
-//     let result = num1 * num2;
-//     return result;
-// }
-
-/** Events */
-// document.querySelector("html").addEventListener("click", function () {
-//     alert("Ouch! Stop poking me!");
-//   });
-  
-// arrow function () =>  instead of function ()
-// document.querySelector("html").addEventListener("click", () => {
-//     alert("Ouch! Stop poking me!");
-// });
 
 
-  
+let recommendButton = document.getElementById("recommendButton");
+let recommendationText = document.getElementById("recommendationText");
+
+function getBookRecommendation() {
+    let myName = prompt('Please enter your name.');
+    if(!myName) {
+      setUserName();
+    } else {
+      localStorage.setItem('name', myName);
+      myHeading.innerHTML = 'Mozilla is cool, ' + myName;
+    }
+}
+
+function displayRecommendation(recommendation) {
+    if (recommendation !== null && recommendation !== "") {
+        recommendationText.textContent = "Your Book Recommendation: " + recommendation;
+    } else {
+        recommendationText.textContent = "No recommendation entered.";
+    }
+ }
+
+ recommendButton.onclick = function() {
+    var userRecommendation = getBookRecommendation();
+    displayRecommendation(userRecommendation)
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get elements
+    var recommendButton = document.getElementById("recommendButton");
+    var recommendationText = document.getElementById("recommendationText");
+
+    // Function to prompt user for a book recommendation
+    function getBookRecommendation() {
+        var userRecommendation = prompt("Enter a book recommendation:");
+        return userRecommendation;
+    }
+
+    // Function to display the book recommendation on the page
+    function displayRecommendation(recommendation) {
+        if (recommendation !== null && recommendation !== "") {
+            recommendationText.textContent = "Your Book Recommendation: " + recommendation;
+        } else {
+            recommendationText.textContent = "No recommendation entered.";
+        }
+    }
+
+    // Event listener for the button click
+    recommendButton.onclick = function () {
+        var userRecommendation = getBookRecommendation();
+        displayRecommendation(userRecommendation);
+    };
+});
+
