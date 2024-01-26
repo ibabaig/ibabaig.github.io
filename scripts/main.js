@@ -10,13 +10,6 @@ myImage.onclick = function() {
   }
 }
 
-let myButton = document.querySelector('button');
-let hiddenImage = document.getElementById("hiddenImage")
-
-myButton.onclick = function() {
-    hiddenImage.style.display = (hiddenImage.style.display === "none") ? "block" : "none";
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     var recommendButton = document.getElementById("recommendButton");
     var recommendationText = document.getElementById("recommendationText");
@@ -38,6 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
         displayRecommendation(userRec);
     };
 });
+
+let myButton = document.getElementById('myButton');
+let hiddenImage = document.getElementById("hiddenImage")
+
+myButton.onclick = function() {
+    hiddenImage.style.display = (hiddenImage.style.display === "none") ? "block" : "none";
+}
 
 // let recommendButton = document.getElementById("recommendButton");
 // let recommendationText = document.getElementById("recommendationText");
