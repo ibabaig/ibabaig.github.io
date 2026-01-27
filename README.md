@@ -51,48 +51,22 @@ My current palette was inspired by colors of water lilies.
    git push -u origin main
    ```
 
-### Daily Git Workflow
+### Git Workflow Reminders
 
 ```bash
-# Check what files have changed
 git status
 
-# Add specific files
+# add one file
 git add filename.jsx
 
-# Or add all changes
+# add all
 git add .
 
-# Commit with a descriptive message
 git commit -m "Add new project to portfolio"
 
-# Push to GitHub
 git push
 
-# Pull latest changes (if working from multiple locations)
 git pull
-```
-
-### Common Git Commands
-
-```bash
-# View commit history
-git log --oneline
-
-# Create a new branch for features
-git checkout -b feature/new-section
-
-# Switch back to main branch
-git checkout main
-
-# Merge a feature branch
-git merge feature/new-section
-
-# Discard changes in a file
-git checkout -- filename.jsx
-
-# Undo last commit (keep changes)
-git reset --soft HEAD~1
 ```
 
 ## Personalization
