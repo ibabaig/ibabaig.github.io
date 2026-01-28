@@ -411,7 +411,7 @@ const Portfolio = () => {
           </a>
 
           <a
-            href="https://github.com/ibabaig"
+            href="https://github.com/ibabaig/"
             target="_blank"
             rel="noopener noreferrer"
             style={{
