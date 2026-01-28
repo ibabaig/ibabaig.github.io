@@ -2,7 +2,7 @@
   "name": "portfolio-website",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://github.com/ibabaig/ibabaig.github.io",
+  "homepage": "https://ibabaig.github.io",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
