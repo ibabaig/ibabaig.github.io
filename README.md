@@ -46,9 +46,12 @@ My current palette was inspired by colors of water lilies.
 
 5. **Connect to remote repository**
    ```bash
-   git remote add origin https://github.com/yourusername/portfolio-website.git
-   git branch -M main
    git push -u origin main
+   ```
+
+6. **Rebuild web**
+   ```bash
+   npm run deploy
    ```
 
 ### Git Workflow Reminders
