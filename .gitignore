@@ -4,6 +4,9 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# for deployment only
+index.html
+
 dist/
 build/
 
