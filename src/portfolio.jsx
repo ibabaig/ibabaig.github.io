@@ -5,6 +5,9 @@ const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [sparkleEnabled, setSparkleEnabled] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +30,8 @@ const Portfolio = () => {
 
   useEffect(() => {
     // Sparkle cursor animation
+    if (!sparkleEnabled) return; // Don't run if disabled
+
     const sparkles = 25;
     let x = 400, y = 300, ox = 400, oy = 300;
     const colours = ['#f62f9c', '#5EE49A', '#5171f2', '#a854f8'];
@@ -215,7 +220,7 @@ const Portfolio = () => {
       tiny.forEach(el => el && el.remove());
       star.forEach(el => el && el.remove());
     };
-  }, []);
+  }, [sparkleEnabled]);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -230,6 +235,22 @@ const Portfolio = () => {
       });
       setIsMenuOpen(false);
     }
+  };
+
+  const handleProjectClick = (project) => {
+    if (project.linkType === 'external' && project.link) {
+      // Open external link in new tab
+      window.open(project.link, '_blank');
+    } else if (project.linkType === 'modal') {
+      // Open modal with project details
+      setSelectedProject(project);
+      setIsModalOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedProject(null), 300); // Delay clearing to allow animation
   };
 
   const nusci_publications = [
@@ -267,25 +288,80 @@ const Portfolio = () => {
 
   const projects = [
     {
-      title: "Project Alpha",
-      description: "A revolutionary web application that transforms how users interact with data visualization and analytics.",
-      tags: ["React", "Node.js", "MongoDB"],
-      link: "#",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80"
+      title: "MBTA Rail Ridership",
+      description: "Interactive data visualization exploring Boston's public transit ridership patterns and trends for a final project.",
+      tags: ["Python", "Plotly", "HTML/CSS/JS", "Altair"],
+      link: "https://github.com/ibabaig/ds4200-final",
+      linkType: "modal",
+      image: "https://upload.wikimedia.org/wikipedia/commons/0/0d/MBTA_Green_Line_B.jpg",
+      detailedDescription: `
+        <h4>Information Presentation and Visualization DS4200 Final Project</h4>
+        <h3>Project Overview</h3>
+        <p>An in-depth analysis and interactive visualization of the Massachusetts Bay Transportation Authority (MBTA) rail ridership data. This project explores patterns in Boston's public transit system, identifying trends across different lines, stations, and time periods.</p>
+        
+        <h3>Key Features</h3>
+        <ul>
+          <li>Interactive dashboards built with Plotly and Altair for exploring ridership trends</li>
+          <li>Time-series analysis showing ridership patterns</li>
+          <li>Station-by-station comparison across all MBTA lines (Red, Orange, Blue, Green)</li>
+          <li>Data preprocessing pipeline handling missing values and outliers during construction times</li>
+          <li>Heat maps visualizing peak usage times and stations</li>
+        </ul>
+        
+        <h3>Technologies & Tools</h3>
+        <p><strong>Data Analysis:</strong> Python, Pandas, NumPy for data cleaning and manipulation</p>
+        <p><strong>Visualization:</strong> Plotly, Altair, Matplotlib, Seaborn for creating interactive and static visualizations</p>
+        <p><strong>Web Technologies:</strong> HTML, CSS, JavaScript for the interactive dashboard interface</p>
+        
+        <h3>Insights & Findings</h3>
+        <p>The analysis revealed ridership patterns to allow for transit planning and service optimization. Downtown stations showed the highest traffic volumes, while weekend ridership patterns differed notably from weekday commuter trends. The visualizations help transit planners understand usage patterns for service optimization.</p>
+        
+        <h3>Project Report and Deployed Website</h3>
+        <div style="margin: 2rem 0; border: 2px solid #e0e0e0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          <iframe 
+            src="public/DS4200_project_summary.pdf" 
+            width="100%" 
+            height="600px"
+            style="border: none; display: block;"
+            title="MBTA Project Report"
+          ></iframe>
+        </div>
+        
+        <h3>Impact</h3>
+        <p>This project demonstrates the power of data visualization in understanding urban transit systems. The interactive dashboards make complex ridership data accessible to 
+        both technical and non-technical stakeholders, supporting data-driven decision making for public transportation planning.</p>
+      `
     },
     {
       title: "Design System",
       description: "Comprehensive component library built with accessibility and scalability at its core.",
       tags: ["TypeScript", "Storybook", "Figma"],
-      link: "#",
-      image: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&q=80"
+      link: null,
+      linkType: "modal",
+      image: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&q=80",
+      detailedDescription: `
+        <h3>Project Overview</h3>
+        <p>A complete design system created to ensure consistency across all product interfaces.</p>
+        
+        <h3>Components Included</h3>
+        <ul>
+          <li>Buttons, forms, and input elements</li>
+          <li>Navigation patterns and layouts</li>
+          <li>Typography system and color palettes</li>
+        </ul>
+      `
     },
     {
       title: "Mobile Experience",
       description: "Native mobile application delivering seamless performance and intuitive user journeys.",
       tags: ["React Native", "Firebase", "Redux"],
-      link: "#",
-      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80"
+      link: "https://github.com/yourusername/mobile-app",
+      linkType: "external",
+      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
+      detailedDescription: `
+        <h3>About This App</h3>
+        <p>A cross-platform mobile application built with React Native...</p>
+      `
     }
   ];
 
@@ -471,6 +547,66 @@ const Portfolio = () => {
             <Linkedin size={20} />
             <span>linkedin.com/in/ibabaig</span>
           </a>
+
+          {/* Sparkle Toggle Button */}
+          <div style={{
+            marginTop: '1.5rem',
+            paddingTop: '1.5rem',
+            borderTop: '1px solid rgba(185, 197, 243, 0.2)'
+          }}>
+            <button
+              onClick={() => setSparkleEnabled(!sparkleEnabled)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                color: '#D7DEDF',
+                backgroundColor: sparkleEnabled ? 'rgba(185, 197, 243, 0.15)' : 'transparent',
+                border: '1px solid rgba(185, 197, 243, 0.3)',
+                fontSize: '0.9rem',
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 400,
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(185, 197, 243, 0.2)';
+                e.currentTarget.style.borderColor = 'rgba(185, 197, 243, 0.5)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = sparkleEnabled ? 'rgba(185, 197, 243, 0.15)' : 'transparent';
+                e.currentTarget.style.borderColor = 'rgba(185, 197, 243, 0.3)';
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                ✨ Sparkle Cursor
+              </span>
+              <div style={{
+                width: '44px',
+                height: '24px',
+                backgroundColor: sparkleEnabled ? '#701648' : 'rgba(79, 96, 100, 0.5)',
+                borderRadius: '100px',
+                position: 'relative',
+                transition: 'all 0.3s ease',
+                boxShadow: sparkleEnabled ? '0 2px 8px rgba(112, 22, 72, 0.3)' : 'none'
+              }}>
+                <div style={{
+                  width: '18px',
+                  height: '18px',
+                  backgroundColor: '#D7DEDF',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  top: '3px',
+                  left: sparkleEnabled ? '23px' : '3px',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                }} />
+              </div>
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -581,6 +717,49 @@ const Portfolio = () => {
               <Linkedin size={18} />
               <span>LinkedIn</span>
             </a>
+
+            {/* Mobile Sparkle Toggle */}
+            <button
+              onClick={() => setSparkleEnabled(!sparkleEnabled)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                color: '#D7DEDF',
+                backgroundColor: sparkleEnabled ? 'rgba(215, 222, 223, 0.1)' : 'transparent',
+                border: '1px solid rgba(215, 222, 223, 0.3)',
+                fontSize: '0.85rem',
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 400,
+                padding: '0.6rem 0.75rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                marginTop: '0.75rem',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <span>✨ Sparkles</span>
+              <div style={{
+                width: '38px',
+                height: '20px',
+                backgroundColor: sparkleEnabled ? '#701648' : 'rgba(79, 96, 100, 0.5)',
+                borderRadius: '100px',
+                position: 'relative',
+                transition: 'all 0.3s ease'
+              }}>
+                <div style={{
+                  width: '14px',
+                  height: '14px',
+                  backgroundColor: '#D7DEDF',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  top: '3px',
+                  left: sparkleEnabled ? '21px' : '3px',
+                  transition: 'all 0.3s ease'
+                }} />
+              </div>
+            </button>
           </div>
         </aside>
       )}
@@ -757,7 +936,7 @@ const Portfolio = () => {
               marginBottom: '5rem'
             }}>
               <a
-                href="/resume.pdf"
+                href="public/Resume 2026 Baig.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -808,7 +987,7 @@ const Portfolio = () => {
                   color: '#5A123A',
                   letterSpacing: '-0.01em'
                 }}>
-                  Featured Projects
+                  Featured Work
                 </h3>
                 <button
                   onClick={() => scrollToSection('projects')}
@@ -1112,6 +1291,7 @@ const Portfolio = () => {
               {projects.map((project, idx) => (
                 <div
                   key={project.title}
+                  onClick={() => handleProjectClick(project)}
                   style={{
                     backgroundColor: '#fff',
                     borderRadius: '20px',
@@ -1238,7 +1418,7 @@ const Portfolio = () => {
                 color: '#B9C5F3',
                 letterSpacing: '-0.02em'
               }}>
-                Creative Writing
+                Publications at NU SCI Magazine
               </h2>
               <p style={{
                 fontSize: '1.2rem',
@@ -1248,9 +1428,8 @@ const Portfolio = () => {
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 300
               }}>
-                Scientists need a rebranding to make their complex research ideas accessible. Science literacy can be achieved
-                through creative writing. To effectively communicate the significance of research to scientific and public audiences,
-                I enjoy writing for the NU Science Magazine, from particle physics to health. Here are my pieces:
+                Science literacy can be achieved through creative writing to effectively communicate the significance of research to both scientific and public audiences.
+                I enjoy writing for the NU Science Magazine, from particle physics to health. Here are some of my pieces:
               </p>
             </div>
 
@@ -1352,6 +1531,192 @@ const Portfolio = () => {
         </footer>
       </div>
 
+      {/* Projects Modal */}
+      {isModalOpen && selectedProject && (
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={closeModal}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              zIndex: 9998,
+              animation: 'fadeIn 0.3s ease-out'
+            }}
+          />
+
+          {/* Modal Container */}
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '90%',
+              maxWidth: '900px',
+              maxHeight: '85vh',
+              backgroundColor: '#fff',
+              borderRadius: '20px',
+              zIndex: 9999,
+              overflow: 'hidden',
+              animation: 'modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{
+              position: 'relative',
+              height: '250px',
+              overflow: 'hidden'
+            }}>
+              <img
+                src={selectedProject.image}
+                alt={selectedProject.title}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
+              />
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7))',
+                display: 'flex',
+                alignItems: 'flex-end',
+                padding: '2rem'
+              }}>
+                <div>
+                  <h2 style={{
+                    fontSize: 'clamp(2rem, 4vw, 3rem)',
+                    fontWeight: 800,
+                    color: '#fff',
+                    marginBottom: '0.5rem',
+                    letterSpacing: '-0.02em'
+                  }}>
+                    {selectedProject.title}
+                  </h2>
+                  <div style={{
+                    display: 'flex',
+                    gap: '0.5rem',
+                    flexWrap: 'wrap'
+                  }}>
+                    {selectedProject.tags.map(tag => (
+                      <span
+                        key={tag}
+                        style={{
+                          padding: '0.35rem 0.85rem',
+                          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                          backdropFilter: 'blur(10px)',
+                          color: '#fff',
+                          borderRadius: '100px',
+                          fontSize: '0.85rem',
+                          fontWeight: 500,
+                          fontFamily: "'Inter', sans-serif"
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                style={{
+                  position: 'absolute',
+                  top: '1.5rem',
+                  right: '1.5rem',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#fff';
+                  e.target.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.target.style.transform = 'scale(1)';
+                }}
+              >
+                <X size={24} color="#5A123A" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div style={{
+              padding: '2.5rem',
+              overflowY: 'auto',
+              maxHeight: 'calc(85vh - 250px)',
+              fontFamily: "'Inter', sans-serif"
+            }}>
+              <div
+                className="modal-content"
+                style={{
+                  fontSize: '1.05rem',
+                  lineHeight: 1.8,
+                  color: '#4F6064'
+                }}
+                dangerouslySetInnerHTML={{ __html: selectedProject.detailedDescription }}
+              />
+              
+              {/* GitHub Link Button (if external link exists) */}
+              {selectedProject.link && (
+                <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid #e0e0e0' }}>
+                  <a
+                    href={selectedProject.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem 1.5rem',
+                      backgroundColor: '#701648',
+                      color: '#fff',
+                      textDecoration: 'none',
+                      borderRadius: '8px',
+                      fontWeight: 600,
+                      fontSize: '0.95rem',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = '#5A123A';
+                      e.target.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = '#701648';
+                      e.target.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <Github size={20} />
+                    View on GitHub
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Animations */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -1425,6 +1790,45 @@ const Portfolio = () => {
           to {
             width: 100%;
           }
+        }
+
+        @keyframes modalSlideIn {
+          from {
+            opacity: 0;
+            transform: translate(-50%, -45%);
+          }
+          to {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+          }
+        }
+
+        /* Modal Content Styling */
+        .modal-content h3 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #5A123A;
+          margin-top: 1.5rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .modal-content p {
+          margin-bottom: 1rem;
+        }
+
+        .modal-content ul {
+          margin: 1rem 0 1.5rem 1.5rem;
+          list-style-type: disc;
+        }
+
+        .modal-content li {
+          margin-bottom: 0.5rem;
+          line-height: 1.7;
+        }
+
+        .modal-content strong {
+          color: #701648;
+          font-weight: 600;
         }
 
         /* Mobile Responsive Styles */
