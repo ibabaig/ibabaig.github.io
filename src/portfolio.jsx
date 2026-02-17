@@ -7,7 +7,7 @@ const Portfolio = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [sparkleEnabled, setSparkleEnabled] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('main'); // 'main' or 'project'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -239,18 +239,18 @@ const Portfolio = () => {
 
   const handleProjectClick = (project) => {
     if (project.linkType === 'external' && project.link) {
-      // Open external link in new tab
       window.open(project.link, '_blank');
     } else if (project.linkType === 'modal') {
-      // Open modal with project details
       setSelectedProject(project);
-      setIsModalOpen(true);
+      setViewMode('project');
+      window.scrollTo(0, 0);
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setTimeout(() => setSelectedProject(null), 300); // Delay clearing to allow animation
+  const handleBackToMain = () => {
+    setViewMode('main');
+    setSelectedProject(null);
+    window.scrollTo(0, 0);
   };
 
   const nusci_publications = [
@@ -333,37 +333,73 @@ const Portfolio = () => {
       `
     },
     {
-      title: "Design System",
+      title: "Automated Behavioral Video Annotator",
       description: "Comprehensive component library built with accessibility and scalability at its core.",
       tags: ["TypeScript", "Storybook", "Figma"],
-      link: null,
+      link: "https://github.com/CaiLab-neuro",
       linkType: "modal",
-      image: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&q=80",
+      image: "https://drive.google.com/file/d/1lPl5giESTJe08AUfsSshEzOb3TQhO2tj/view",
       detailedDescription: `
         <h3>Project Overview</h3>
-        <p>A complete design system created to ensure consistency across all product interfaces.</p>
-        
-        <h3>Components Included</h3>
+        <p>For my 2nd Co-op, I was a research engineer at Cognition and Intelligence Lab at University of Miami. Here, I developed an automated behavioral video annotator for analyzing parent-child interactions in video data.</p>
+        <p> Initially, I was interested in creating my own ML model for video annotation, but I was able to leverage existing models and build upon them to create a simpler and efficient system. I used ByteDance's Tarsier Video-LM and
+        added a custom annotation pipeline to prompt-engineer behaviors. Tarsier is interchangeable with any video-lm. Future work includes testing different models for best output compared to human validation and training an ML model
+        with annotation output to predict behavioral labels.</p>
+        <h3>Components</h3>
         <ul>
-          <li>Buttons, forms, and input elements</li>
-          <li>Navigation patterns and layouts</li>
-          <li>Typography system and color palettes</li>
+          <li>Video Segmentation & Annotation</li>
+          <li>Video-Language Model Inference Engine</li>
+          <li>Custom Prompt Engineering for Behavior Annotation</li>
+          <li>Model Validation with Human Annotation (ELAN)</li>
         </ul>
+        <h3>Implementation</h3>
+        <p> For the video segmentation, I used ffmpeg to take videos and segment into short clips at defined intervals (ex. 0.3s clips every 0.3s) For each clip, it calls the inference module to generate annotations. It collects
+        the output for multiple behavioral attributes: child and parent hand actions, toy proximity, pose. Then it writes all outputs to a CSV file.</p>
+        <p> For the video-language model inference engine, I integrated pretrained video-language model (Tarsier2-7b) and a preset prompt bank JSON configuration. It runs a single multimodal conversation per video clip where
+        the model views the video, answers multiple predefined behavioral questions within the same conversation, and generates text response. It normalizes the model's raw text output to closed-set categorical labels. Essentially: exact match ->
+        aliases -> word matching -> prefix matching -> substring matching. Outputs results as JSONL with raw model text and normalized labels.</p>
+        <p> This system forms an automated video annotation pipeline for our dataset on parent-child interactions in structured room where the parent teaches the child about 2 known objects and 2 novel objects.</p>
+        <p> After generating annotations for all videos in the dataset, I used the CSV output to validade the models performance with human annotations from ELAN software.</p>
+        <h3>NeuroBoston Fall Symposium 2025 Poster Presentation</h3>
+        <p> With the help of Northeastern Conference Travel Award, I was able to attend the NeuroBoston Fall Symposium 2025 and present my work on automated video annotation for parent-child interactions.</p>
+        <div style="margin: 1rem 0; border: 2px solid #e0e0e0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          <iframe 
+            src="https://drive.google.com/file/d/1lPl5giESTJe08AUfsSshEzOb3TQhO2tj/preview"
+            width="640" 
+            height="480"
+            style="border: none; display: block;"
+            title="MBTA Project Report"
+          ></iframe>
+        </div>
+
       `
     },
     {
-      title: "Mobile Experience",
-      description: "Native mobile application delivering seamless performance and intuitive user journeys.",
-      tags: ["React Native", "Firebase", "Redux"],
-      link: "https://github.com/yourusername/mobile-app",
-      linkType: "external",
+      title: "Zor: Epilepsy Digital Health-Management",
+      description: "Startup company for a mobile app delivering medication tracking, seizure reporting, health tracking, and health record management.",
+      tags: ["Figma", "Jira", "SQL", "Swift"],
+      link: "https://zor.llc/",
+      linkType: "modal",
       image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
       detailedDescription: `
-        <h3>About This App</h3>
-        <p>A cross-platform mobile application built with React Native...</p>
+        <h2>About ZOR</h2>
+        <p>ZOR! is digital health startup. Revolutionizing epilepsy management and care for patients and caregivers via non-invasive, predictive technologies. I work primarily as a product manager and clinical consultant,
+         to ensure standardizing and centralizing epilepsy patient and caregiver needs. </p>
+        <p> People with epilepsy need to track seizures and medication changes regularly, but most resort to basic notes apps that weren't designed for complex health tracking. This makes it difficult to spot patterns, share data with doctors, or access information quickly during emergencies. </p>
+        <h3>Key Contributions</h3>
+        <ul>
+          <li>What are the most important features for epilepsy management? I conducted user research and prioritized feature development.</li>
+          <li>What do epilepsy patients and caretakers want to track? How can we learn about them to improve characterization and seizure prediction? I created our database design schema called our "Data Bible".</li>
+          <li>What is the perfect user experience for epilepsy management? I created a user persona and map to guide product development.</li>
+          <li>How do we make the app accessible and usable for people with varying levels of technical literacy and physical abilities? I iterated on design decisions, language, and technical implementations.</li>
+          <li>What are the most important features for epilepsy management? I conducted user research and prioritized feature development.</li>
+        </ul>
+        <h3>Current Homepage</h3>
+        <iframe src="https://drive.google.com/file/d/1gpcpHLPzg5yOsKCa1PK4ykqtnFa1URkm/preview" width="640" height="480"></iframe>
       `
     }
   ];
+
 
   return (
     <div style={{
@@ -547,66 +583,6 @@ const Portfolio = () => {
             <Linkedin size={20} />
             <span>linkedin.com/in/ibabaig</span>
           </a>
-
-          {/* Sparkle Toggle Button */}
-          <div style={{
-            marginTop: '1.5rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid rgba(185, 197, 243, 0.2)'
-          }}>
-            <button
-              onClick={() => setSparkleEnabled(!sparkleEnabled)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                color: '#D7DEDF',
-                backgroundColor: sparkleEnabled ? 'rgba(185, 197, 243, 0.15)' : 'transparent',
-                border: '1px solid rgba(185, 197, 243, 0.3)',
-                fontSize: '0.9rem',
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(185, 197, 243, 0.2)';
-                e.currentTarget.style.borderColor = 'rgba(185, 197, 243, 0.5)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = sparkleEnabled ? 'rgba(185, 197, 243, 0.15)' : 'transparent';
-                e.currentTarget.style.borderColor = 'rgba(185, 197, 243, 0.3)';
-              }}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                ✨ Sparkle Cursor
-              </span>
-              <div style={{
-                width: '44px',
-                height: '24px',
-                backgroundColor: sparkleEnabled ? '#701648' : 'rgba(79, 96, 100, 0.5)',
-                borderRadius: '100px',
-                position: 'relative',
-                transition: 'all 0.3s ease',
-                boxShadow: sparkleEnabled ? '0 2px 8px rgba(112, 22, 72, 0.3)' : 'none'
-              }}>
-                <div style={{
-                  width: '18px',
-                  height: '18px',
-                  backgroundColor: '#D7DEDF',
-                  borderRadius: '50%',
-                  position: 'absolute',
-                  top: '3px',
-                  left: sparkleEnabled ? '23px' : '3px',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
-                }} />
-              </div>
-            </button>
-          </div>
         </div>
       </aside>
 
@@ -717,49 +693,6 @@ const Portfolio = () => {
               <Linkedin size={18} />
               <span>LinkedIn</span>
             </a>
-
-            {/* Mobile Sparkle Toggle */}
-            <button
-              onClick={() => setSparkleEnabled(!sparkleEnabled)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                color: '#D7DEDF',
-                backgroundColor: sparkleEnabled ? 'rgba(215, 222, 223, 0.1)' : 'transparent',
-                border: '1px solid rgba(215, 222, 223, 0.3)',
-                fontSize: '0.85rem',
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
-                padding: '0.6rem 0.75rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                marginTop: '0.75rem',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              <span>✨ Sparkles</span>
-              <div style={{
-                width: '38px',
-                height: '20px',
-                backgroundColor: sparkleEnabled ? '#701648' : 'rgba(79, 96, 100, 0.5)',
-                borderRadius: '100px',
-                position: 'relative',
-                transition: 'all 0.3s ease'
-              }}>
-                <div style={{
-                  width: '14px',
-                  height: '14px',
-                  backgroundColor: '#D7DEDF',
-                  borderRadius: '50%',
-                  position: 'absolute',
-                  top: '3px',
-                  left: sparkleEnabled ? '21px' : '3px',
-                  transition: 'all 0.3s ease'
-                }} />
-              </div>
-            </button>
           </div>
         </aside>
       )}
@@ -782,12 +715,14 @@ const Portfolio = () => {
         />
       )}
 
-      {/* Main */}
+      {/* Main Content - Conditional View */}
       <div style={{
         marginLeft: '320px',
         minHeight: '100vh'
       }} className="main-content">
 
+        {viewMode === 'main' ? (
+          <>
         {/* Top Navigation Bar */}
         <nav style={{
           position: 'fixed',
@@ -923,10 +858,9 @@ const Portfolio = () => {
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 300
               }}>
-                I study data science and behavioral neuroscience. I'm interested in how the two subjects
-                intertwine, from quantitative research to computational neuroscience. Inspired by initial pre-med pathway, I intend
+                I study data science and behavioral neuroscience. I'm interested in how the two subjects intertwine in the real world, from applied ML research to forward-deployed engineering. Inspired by initial pre-med pathway, I intend
                 to create human-centered solutions to improve daily life with the help of technology. With expertise in both the brain and technical
-                implementation, I value my intuition, intentional problem-solving, creative writing, and communication skills, especially in the age of AI advancement.
+                implementation, I value intentional problem-solving, creativity, and communication skills, especially in the age of AI advancement.
               </p>
             </div>
 
@@ -936,7 +870,7 @@ const Portfolio = () => {
               marginBottom: '5rem'
             }}>
               <a
-                href="public/Resume 2026 Baig.pdf"
+                href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -987,7 +921,7 @@ const Portfolio = () => {
                   color: '#5A123A',
                   letterSpacing: '-0.01em'
                 }}>
-                  Featured Work
+                  Featured Projects
                 </h3>
                 <button
                   onClick={() => scrollToSection('projects')}
@@ -1024,6 +958,7 @@ const Portfolio = () => {
                 {projects.slice(0, 2).map((project, idx) => (
                   <div
                     key={project.title}
+                    onClick={() => handleProjectClick(project)}
                     style={{
                       backgroundColor: '#fff',
                       borderRadius: '16px',
@@ -1156,7 +1091,7 @@ const Portfolio = () => {
                 fontWeight: 300
               }}>
                 I am eager to take on roles to learn something new, to interact with different types of people,
-                and where I'm analytical, autonomous, and vibe coding.
+                and where I'm analytical.
               </p>
               <p style={{
                 fontSize: '1.2rem',
@@ -1418,7 +1353,7 @@ const Portfolio = () => {
                 color: '#B9C5F3',
                 letterSpacing: '-0.02em'
               }}>
-                Publications at NU SCI Magazine
+                Creative Writing
               </h2>
               <p style={{
                 fontSize: '1.2rem',
@@ -1428,8 +1363,9 @@ const Portfolio = () => {
                 fontFamily: "'Inter', sans-serif",
                 fontWeight: 300
               }}>
-                Science literacy can be achieved through creative writing to effectively communicate the significance of research to both scientific and public audiences.
-                I enjoy writing for the NU Science Magazine, from particle physics to health. Here are some of my pieces:
+                Scientists strive to make complex research ideas accessible. Science literacy can be achieved
+                through writing intentionally to effectively communicate the significance of research to scientific and public audiences.
+                I enjoy writing for the NU Science Magazine for this reason, from particle physics to health. Here are my pieces:
               </p>
             </div>
 
@@ -1529,193 +1465,228 @@ const Portfolio = () => {
         }}>
           <p>© 2026 Iba Baig.</p>
         </footer>
-      </div>
+        </>
+        ) : (
+          /* Project Detail View */
+          <>
+            {/* Back Button Navigation */}
+            <nav style={{
+              position: 'fixed',
+              top: 0,
+              left: '320px',
+              right: 0,
+              zIndex: 800,
+              backgroundColor: '#201b2d',
+              backdropFilter: 'blur(10px)',
+              borderBottom: '1px solid rgba(79, 96, 100, 0.2)',
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
+            }} className="desktop-nav">
+              <div style={{
+                maxWidth: '1200px',
+                margin: '0 auto',
+                padding: '1.25rem 3rem',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <button
+                  onClick={handleBackToMain}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    background: 'none',
+                    border: 'none',
+                    color: '#D7DEDF',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    padding: '0.5rem 1rem',
+                    borderRadius: '8px',
+                    transition: 'all 0.3s ease',
+                    fontFamily: "'Inter', sans-serif"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(185, 197, 243, 0.1)';
+                    e.currentTarget.style.color = '#B9C5F3';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#D7DEDF';
+                  }}
+                >
+                  <X size={20} style={{ transform: 'rotate(0deg)' }} />
+                  Back to Portfolio
+                </button>
+              </div>
+            </nav>
 
-      {/* Projects Modal */}
-      {isModalOpen && selectedProject && (
-        <>
-          {/* Backdrop */}
-          <div
-            onClick={closeModal}
-            style={{
+            {/* Mobile Back Button */}
+            <nav style={{
+              display: 'none',
               position: 'fixed',
               top: 0,
               left: 0,
               right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              zIndex: 9998,
-              animation: 'fadeIn 0.3s ease-out'
-            }}
-          />
-
-          {/* Modal Container */}
-          <div
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '90%',
-              maxWidth: '900px',
-              maxHeight: '85vh',
-              backgroundColor: '#fff',
-              borderRadius: '20px',
-              zIndex: 9999,
-              overflow: 'hidden',
-              animation: 'modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)'
-            }}
-          >
-            {/* Modal Header */}
-            <div style={{
-              position: 'relative',
-              height: '250px',
-              overflow: 'hidden'
-            }}>
-              <img
-                src={selectedProject.image}
-                alt={selectedProject.title}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-              />
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7))',
-                display: 'flex',
-                alignItems: 'flex-end',
-                padding: '2rem'
-              }}>
-                <div>
-                  <h2 style={{
-                    fontSize: 'clamp(2rem, 4vw, 3rem)',
-                    fontWeight: 800,
-                    color: '#fff',
-                    marginBottom: '0.5rem',
-                    letterSpacing: '-0.02em'
-                  }}>
-                    {selectedProject.title}
-                  </h2>
-                  <div style={{
-                    display: 'flex',
-                    gap: '0.5rem',
-                    flexWrap: 'wrap'
-                  }}>
-                    {selectedProject.tags.map(tag => (
-                      <span
-                        key={tag}
-                        style={{
-                          padding: '0.35rem 0.85rem',
-                          backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                          backdropFilter: 'blur(10px)',
-                          color: '#fff',
-                          borderRadius: '100px',
-                          fontSize: '0.85rem',
-                          fontWeight: 500,
-                          fontFamily: "'Inter', sans-serif"
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Close Button */}
+              zIndex: 800,
+              backgroundColor: '#4F6064',
+              backdropFilter: 'blur(10px)',
+              borderBottom: '1px solid rgba(79, 96, 100, 0.2)',
+              padding: '1rem'
+            }} className="mobile-nav">
               <button
-                onClick={closeModal}
+                onClick={handleBackToMain}
                 style={{
-                  position: 'absolute',
-                  top: '1.5rem',
-                  right: '1.5rem',
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  border: 'none',
-                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#fff';
-                  e.target.style.transform = 'scale(1.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-                  e.target.style.transform = 'scale(1)';
+                  gap: '0.5rem',
+                  background: 'none',
+                  border: 'none',
+                  color: '#D7DEDF',
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  fontWeight: 500,
+                  fontFamily: "'Inter', sans-serif"
                 }}
               >
-                <X size={24} color="#5A123A" />
+                <X size={20} />
+                Back
               </button>
-            </div>
+            </nav>
 
-            {/* Modal Content */}
-            <div style={{
-              padding: '2.5rem',
-              overflowY: 'auto',
-              maxHeight: 'calc(85vh - 250px)',
-              fontFamily: "'Inter', sans-serif"
-            }}>
-              <div
-                className="modal-content"
-                style={{
-                  fontSize: '1.05rem',
-                  lineHeight: 1.8,
-                  color: '#4F6064'
-                }}
-                dangerouslySetInnerHTML={{ __html: selectedProject.detailedDescription }}
-              />
-              
-              {/* GitHub Link Button (if external link exists) */}
-              {selectedProject.link && (
-                <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid #e0e0e0' }}>
-                  <a
-                    href={selectedProject.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+            {/* Project Detail Content */}
+            {selectedProject && (
+              <div style={{
+                padding: 'clamp(6rem, 10vh, 8rem) 3rem 4rem 3rem',
+                backgroundColor: '#D7DEDF',
+                minHeight: '100vh'
+              }}>
+                <div style={{
+                  maxWidth: '1000px',
+                  margin: '0 auto'
+                }}>
+                  {/* Project Hero */}
+                  <div style={{
+                    marginBottom: '3rem',
+                    animation: 'fadeInUp 0.8s ease-out'
+                  }}>
+                    <div style={{
+                      height: '400px',
+                      borderRadius: '20px',
+                      overflow: 'hidden',
+                      marginBottom: '2rem',
+                      boxShadow: '0 20px 60px rgba(90, 18, 58, 0.15)'
+                    }}>
+                      <img
+                        src={selectedProject.image}
+                        alt={selectedProject.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                      />
+                    </div>
+
+                    <h1 style={{
+                      fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                      fontWeight: 800,
+                      marginBottom: '1rem',
+                      color: '#5A123A',
+                      letterSpacing: '-0.02em',
+                      lineHeight: 1.1
+                    }}>
+                      {selectedProject.title}
+                    </h1>
+
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '0.75rem',
+                      marginBottom: '2rem'
+                    }}>
+                      {selectedProject.tags.map(tag => (
+                        <span
+                          key={tag}
+                          style={{
+                            padding: '0.5rem 1.25rem',
+                            backgroundColor: '#701648',
+                            color: '#D7DEDF',
+                            borderRadius: '100px',
+                            fontSize: '0.95rem',
+                            fontWeight: 600,
+                            fontFamily: "'Inter', sans-serif"
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Project Description */}
+                  <div
+                    className="modal-content"
                     style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      padding: '0.75rem 1.5rem',
-                      backgroundColor: '#701648',
-                      color: '#fff',
-                      textDecoration: 'none',
-                      borderRadius: '8px',
-                      fontWeight: 600,
-                      fontSize: '0.95rem',
-                      transition: 'all 0.3s ease'
+                      backgroundColor: '#fff',
+                      borderRadius: '20px',
+                      padding: '3rem',
+                      boxShadow: '0 10px 40px rgba(90, 18, 58, 0.1)',
+                      fontSize: '1.1rem',
+                      lineHeight: 1.8,
+                      color: '#4F6064',
+                      fontFamily: "'Inter', sans-serif",
+                      marginBottom: '3rem',
+                      animation: 'fadeInUp 0.8s ease-out 0.2s both'
                     }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = '#5A123A';
-                      e.target.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = '#701648';
-                      e.target.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    <Github size={20} />
-                    View on GitHub
-                  </a>
+                    dangerouslySetInnerHTML={{ __html: selectedProject.detailedDescription }}
+                  />
+
+                  {/* GitHub Link Button */}
+                  {selectedProject.link && (
+                    <div style={{
+                      animation: 'fadeInUp 0.8s ease-out 0.4s both'
+                    }}>
+                      <a
+                        href={selectedProject.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.75rem',
+                          padding: '1.25rem 2.5rem',
+                          backgroundColor: '#701648',
+                          color: '#D7DEDF',
+                          textDecoration: 'none',
+                          borderRadius: '100px',
+                          fontWeight: 600,
+                          fontSize: '1.1rem',
+                          transition: 'all 0.3s ease',
+                          fontFamily: "'Inter', sans-serif",
+                          boxShadow: '0 10px 30px rgba(112, 22, 72, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = '#5A123A';
+                          e.target.style.transform = 'translateY(-2px)';
+                          e.target.style.boxShadow = '0 15px 40px rgba(112, 22, 72, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = '#701648';
+                          e.target.style.transform = 'translateY(0)';
+                          e.target.style.boxShadow = '0 10px 30px rgba(112, 22, 72, 0.3)';
+                        }}
+                      >
+                        <Github size={22} />
+                        View on GitHub
+                      </a>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
-        </>
-      )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {/* Animations */}
       <style>{`
@@ -1790,45 +1761,6 @@ const Portfolio = () => {
           to {
             width: 100%;
           }
-        }
-
-        @keyframes modalSlideIn {
-          from {
-            opacity: 0;
-            transform: translate(-50%, -45%);
-          }
-          to {
-            opacity: 1;
-            transform: translate(-50%, -50%);
-          }
-        }
-
-        /* Modal Content Styling */
-        .modal-content h3 {
-          font-size: 1.5rem;
-          font-weight: 700;
-          color: #5A123A;
-          margin-top: 1.5rem;
-          margin-bottom: 0.75rem;
-        }
-
-        .modal-content p {
-          margin-bottom: 1rem;
-        }
-
-        .modal-content ul {
-          margin: 1rem 0 1.5rem 1.5rem;
-          list-style-type: disc;
-        }
-
-        .modal-content li {
-          margin-bottom: 0.5rem;
-          line-height: 1.7;
-        }
-
-        .modal-content strong {
-          color: #701648;
-          font-weight: 600;
         }
 
         /* Mobile Responsive Styles */
