@@ -9,3 +9,6 @@
 
 .hero-name{font-family:var(--sans);font-size:clamp(4.2rem,9vw,8.5rem);font-weight:700;letter-spacing:-.085em;margin-bottom:28px}.hero-name strong{font-weight:700}.hero-note{max-width:320px;padding:38px 34px 35px}.note-kicker{font-size:13px;letter-spacing:.13em}.note-title{font-size:38px}.research{background:var(--paper-deep)}
 @media(max-width:760px){.hero-name{font-size:clamp(4rem,18vw,6.2rem)}.hero-note{max-width:300px;padding:34px 29px 31px}.note-title{font-size:34px}}
+
+.site-shell{padding-top:84px}.topbar{position:fixed;left:0;right:0;top:0}
+@media(max-width:760px){.site-shell{padding-top:70px}}
